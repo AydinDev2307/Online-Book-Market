@@ -11,8 +11,6 @@ const filtrSelect = document.getElementById('filtr');
 
 let cards = JSON.parse(localStorage.getItem('books')) || [];
 let updateId = null;
-
-// Checkbox boshqaruvi
 discount.addEventListener('change', () => {
   if (discount.checked) {
     isSale.style.display = 'flex';
@@ -24,13 +22,9 @@ discount.addEventListener('change', () => {
     discountSum.setAttribute('disabled', true);
   }
 });
-
-// Local storage saqlash
 function saveToLocal() {
   localStorage.setItem('books', JSON.stringify(cards));
 }
-
-// Formani tozalash
 function clearForm() {
   name.value = '';
   img.value = '';
@@ -42,8 +36,6 @@ function clearForm() {
   add.textContent = 'Qo‘shish';
   updateId = null;
 }
-
-// Mahsulotlarni chiqarish
 function render() {
   bookBox.innerHTML = '';
 
@@ -51,17 +43,13 @@ function render() {
     bookBox.innerHTML = `<p class="text-center text-white italic mt-4">Hozircha hech qanday mahsulot yo‘q</p>`;
     return;
   }
-
   cards.forEach((card) => {
     const div = document.createElement('div');
     div.className =
       'w-[95%] h-[110px] bg-white/20 backdrop-blur-sm flex items-center justify-around rounded-[14px] mb-[10px] text-white font-[500] hover:bg-white/30 transition-all duration-300';
-
-    // chegirma narxini hisoblash
     const discountedPrice = card.discount
       ? card.price - (card.price * card.discountSum) / 100
       : card.price;
-
     div.innerHTML = `
       <img src="${card.img}" alt="${
       card.name
@@ -101,8 +89,6 @@ function render() {
     bookBox.appendChild(div);
   });
 }
-
-// Yangi mahsulot qo‘shish
 add.addEventListener('click', () => {
   if (updateId) {
     updateCard();
@@ -140,14 +126,12 @@ add.addEventListener('click', () => {
   clearForm();
 });
 
-// O‘chirish funksiyasi
 function deleteCard(id) {
   cards = cards.filter((card) => card.id !== id);
   saveToLocal();
   render();
 }
 
-// Tahrirlash funksiyasi
 function editCard(id) {
   const card = cards.find((c) => c.id === id);
   if (!card) return;
@@ -169,7 +153,6 @@ function editCard(id) {
   add.textContent = 'Yangilash';
 }
 
-// Yangilash funksiyasi
 function updateCard() {
   const index = cards.findIndex((c) => c.id === updateId);
   if (index === -1) return;
@@ -189,33 +172,27 @@ function updateCard() {
   clearForm();
 }
 
-// Sahifa yuklanganda render qilish
 render();
 
-// LocalStorage'dan ma'lumotni olish
 let books = JSON.parse(localStorage.getItem('books')) || [];
 
-// Saqlash funksiyasi
 function saveBooks() {
   localStorage.setItem('books', JSON.stringify(books));
 }
 
-// Kitoblarni chiqarish funksiyasi
 function renderBooks() {
-  bookBox.innerHTML = ''; // Avval tozalaymiz
+  bookBox.innerHTML = '';
 
   books.forEach((book, index) => {
     const bookCard = document.createElement('div');
     bookCard.className =
       'w-[96%] flex items-center justify-between bg-white rounded-[15px] shadow-md p-[10px] mb-[15px]';
 
-    // Rasm
     const img = document.createElement('img');
     img.src = book.img;
     img.alt = book.name;
     img.className = 'w-[140px] h-[140px] object-cover rounded-[10px]';
 
-    // Ma’lumotlar
     const info = document.createElement('div');
     info.className = 'flex flex-col gap-[5px] w-[300px]';
 
@@ -223,7 +200,6 @@ function renderBooks() {
     name.textContent = book.name;
     name.className = 'text-[22px] font-[600]';
 
-    // Narx
     const priceBox = document.createElement('div');
     priceBox.className = 'flex items-center gap-[10px]';
 
@@ -242,14 +218,12 @@ function renderBooks() {
       priceBox.append(price);
     }
 
-    // Soni
     const count = document.createElement('p');
     count.textContent = `Soni: ${book.count}`;
     count.className = 'text-[16px] text-gray-600';
 
     info.append(name, priceBox, count);
 
-    // Tugmalar
     const btnBox = document.createElement('div');
     btnBox.className = 'flex gap-[10px]';
 
@@ -263,7 +237,6 @@ function renderBooks() {
     deleteBtn.className =
       'bg-red-500 hover:bg-red-600 text-white px-[15px] py-[5px] rounded';
 
-    // O‘chirish tugmasi ishlashi
     deleteBtn.addEventListener('click', () => {
       books.splice(index, 1);
       saveBooks();
@@ -276,7 +249,6 @@ function renderBooks() {
   });
 }
 
-// 🔹 Filtrni qo‘llash funksiyasi
 function applyFilter() {
   const value = filtrSelect.value;
 
@@ -290,22 +262,19 @@ function applyFilter() {
     books.sort((a, b) => a.price - b.price);
   }
 
-  // Tanlangan filtrni saqlaymiz
   localStorage.setItem('selectedFilter', value);
 
   renderBooks();
 }
 
-// Filtr o‘zgarganda ishlaydi
 filtrSelect.addEventListener('change', applyFilter);
 
-// Sahifa yangilanganda oxirgi filtrni tiklash
 window.addEventListener('load', () => {
   const savedFilter = localStorage.getItem('selectedFilter');
   if (savedFilter) {
     filtrSelect.value = savedFilter;
-    applyFilter(); // shu filtr bo‘yicha chiqaradi
+    applyFilter();
   } else {
-    renderBooks(); // filtr tanlanmagan bo‘lsa oddiy chiqaradi
+    renderBooks();
   }
 });
